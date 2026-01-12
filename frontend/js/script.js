@@ -45,6 +45,14 @@ const createMessageOtherElement = (userName, userColor, content) => {
     return div
 }
 
+const createMessageServer = (content) => {
+    const div = document.createElement('div')
+    div.classList.add('message__server')
+    div.innerHTML = content
+
+    return div
+}
+
 const scrollScreen = () => {
     window.scrollTo({
         top: document.body.scrollHeight,
@@ -53,14 +61,20 @@ const scrollScreen = () => {
 }
 
 const processMessage = ({ data }) => {
-    const { userId, userName, userColor, content} = JSON.parse(data)
+    const { userId, userName, userColor, content, messageServer} = JSON.parse(data)
+    let message = ''
 
-    const message = 
-        user.id == userId 
-            ? createMessageSelfElement(content)
-            : createMessageOtherElement(userName, userColor, content)
-
+    if (messageServer) {
+        message = createMessageServer(content)
+    } else {
+        message = 
+            user.id == userId 
+                ? createMessageSelfElement(content)
+                : createMessageOtherElement(userName, userColor, content)
+    }
+    
     chatMessages.appendChild(message)
+
     scrollScreen()
 }
 
@@ -80,6 +94,15 @@ const handleLogin = (event) => {
     chat.style.display = 'flex'
 
     websocket = new WebSocket('wss://chat-backend-idsp.onrender.com')
+
+    websocket.onopen = () =>
+        websocket.send(JSON.stringify({
+            userId: user.id,
+            userName: user.name,
+            userColor: user.color,
+            content: `${user.name} entrou no chat`,
+            messageServer: true
+        }))
 
     websocket.onmessage = processMessage
 

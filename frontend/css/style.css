@@ -15,6 +15,7 @@
 
 body {
     background: #333 url("../images/background.png");
+    overflow-x: hidden;
 }
 
 #container {
@@ -88,14 +89,17 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: end;
+    transition: 1s;
 }
 
-.chat__messages > div {
+.message__self,
+.message__other {
     width: 100%;
     max-width: 220px;
     padding: 15px;
     font-size: 0.8rem;
     line-height: 20px;
+    overflow-wrap: break-word;
 }
 
 .message__self {
@@ -117,6 +121,21 @@ body {
     color: gold;
 }
 
+.message__server {
+    height: 30px;
+    width: 300px;
+    color: #f2f2f2;
+    align-self: center;
+    background-color: #786d42;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    margin: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .chat__form {
     position: fixed;
     bottom: 0;
@@ -130,12 +149,12 @@ body {
 }
 
 .chat__input {
-    flex-grow: 1;
     padding: 10px;
     background-color: #121212;
     color: #f2f2f2;
     border-radius: 5px;
     font-size: 0.8rem;
+    flex-grow: 1;
 }
 
 .chat__button {
