@@ -56,7 +56,7 @@ const handleLogin = (event) => {
         websocket.send(
             JSON.stringify({
                 userId: user.id,
-                userName: "Servidor",
+                userName: user.name,
                 userColor: user.color,
                 content: `${user.name} entrou no chat`,
                 messageServer: true,
