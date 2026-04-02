@@ -50,8 +50,7 @@ const handleLogin = (event) => {
     login.style.display = "none";
     chat.style.display = "flex";
 
-    websocket = new WebSocket("ws://localhost:8080");
-    // wss://chat-backend-idsp.onrender.com
+    websocket = new WebSocket("wss://chat-backend-idsp.onrender.com");
 
     websocket.onopen = () =>
         websocket.send(
