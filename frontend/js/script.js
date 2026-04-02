@@ -51,12 +51,12 @@ const handleLogin = (event) => {
     chat.style.display = "flex";
 
     websocket = new WebSocket("wss://chat-backend-idsp.onrender.com");
-
+    
     websocket.onopen = () =>
         websocket.send(
             JSON.stringify({
                 userId: user.id,
-                userName: user.name,
+                userName: "Servidor",
                 userColor: user.color,
                 content: `${user.name} entrou no chat`,
                 messageServer: true,
@@ -64,8 +64,6 @@ const handleLogin = (event) => {
         );
 
     websocket.onmessage = processMessage;
-
-    console.log(user);
 };
 
 const sendMessage = (event) => {
