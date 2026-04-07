@@ -115,14 +115,27 @@ const handleResponse = ({ target }) => {
         </button>
     `;
 
-    document.querySelector(".remove-response").addEventListener("click", () => {
-        responseContainer.style.display = "none";
-        messageResponse = null
-    });
-
     messageResponse = { userId, userName, userColor, content };
 };
+
+let pressTimer;
 
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
 chatMessages.addEventListener("dblclick", handleResponse);
+responseContainer.addEventListener("click", ({ target }) => {
+    if (target.closest(".remove-response")) {
+        responseContainer.style.display = "none";
+        messageResponse = null;
+    }
+});
+
+// Touch events
+chatMessages.addEventListener("touchstart", (event) => {
+    pressTimer = setTimeout(() => {
+        handleResponse(event)
+    }, 500)
+})
+
+chatMessages.addEventListener("touchend", () => clearTimeout(pressTimer))
+chatMessages.addEventListener("touchmove", () => clearTimeout(pressTimer))

@@ -98,7 +98,7 @@ body {
 }
 
 .message__container:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .message__self,
@@ -110,6 +110,7 @@ body {
     line-height: 20px;
     overflow-wrap: break-word;
     cursor: pointer;
+    user-select: none;
 }
 
 .message__self {
@@ -146,6 +147,7 @@ body {
     align-self: center;
     justify-content: center;
     align-items: center;
+    user-select: none;
 }
 
 .response__container {
