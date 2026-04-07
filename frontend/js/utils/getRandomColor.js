@@ -4,6 +4,7 @@ const colors = [
     'cornflowerblue',
     'darkkhaki',
     'hotpink',
+    'darkorchid',  
     'gold'
 ]
 

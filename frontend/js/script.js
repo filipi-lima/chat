@@ -12,26 +12,42 @@ const chat = document.querySelector(".chat");
 const chatForm = chat.querySelector(".chat__form");
 const chatInput = chat.querySelector(".chat__input");
 const chatMessages = chat.querySelector(".chat__messages");
+const responseContainer = chat.querySelector(".response__container");
 
 // UserSchema
 const user = { id: "", name: "", color: "" };
 let websocket;
+let messageResponse = null;
 
 const processMessage = ({ data }) => {
-    const { userId, userName, userColor, content, messageServer } =
-        JSON.parse(data);
+    const {
+        userId,
+        userName,
+        userColor,
+        content,
+        messageServer,
+        messageResponse,
+    } = JSON.parse(data);
     let message = "";
 
     if (messageServer) {
-        message = Message.createMessageServer(content);
+        message = Message.createMessageServerElement(content);
     } else {
         message =
             user.id == userId
-                ? Message.createMessageSelfElement(content)
-                : Message.createMessageOtherElement(
+                ? Message.createMessageSelfElement(
+                      userId,
                       userName,
                       userColor,
                       content,
+                      messageResponse,
+                  )
+                : Message.createMessageOtherElement(
+                      userId,
+                      userName,
+                      userColor,
+                      content,
+                      messageResponse,
                   );
     }
 
@@ -43,27 +59,26 @@ const processMessage = ({ data }) => {
 const handleLogin = (event) => {
     event.preventDefault();
 
-    user.name = loginInput.value;
     user.id = crypto.randomUUID();
+    user.name = loginInput.value;
     user.color = getRandomColor();
 
     login.style.display = "none";
     chat.style.display = "flex";
 
     websocket = new WebSocket("wss://chat-backend-idsp.onrender.com");
-    
+
     websocket.onopen = () =>
         websocket.send(
             JSON.stringify({
-                userId: user.id,
                 userName: user.name,
-                userColor: user.color,
                 content: `${user.name} entrou no chat`,
                 messageServer: true,
             }),
         );
 
     websocket.onmessage = processMessage;
+    chatInput.focus();
 };
 
 const sendMessage = (event) => {
@@ -75,12 +90,39 @@ const sendMessage = (event) => {
         userColor: user.color,
         content: chatInput.value,
         messageServer: false,
+        messageResponse,
     };
 
     websocket.send(JSON.stringify(message));
 
     chatInput.value = "";
+    messageResponse = null;
+    responseContainer.style.display = "none";
+    chatInput.focus();
+};
+
+const handleResponse = ({ target }) => {
+    const messageElement = target.closest(".message__other, .message__self");
+    if (!messageElement) return;
+
+    const { userId, userName, userColor, content } = messageElement.dataset;
+
+    responseContainer.style.display = "block";
+    responseContainer.innerHTML = `
+        <span>Responder <b style="color: ${userColor}">${userName}</b>: ${content}</span>
+        <button type="button" class="remove-response">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    `;
+
+    document.querySelector(".remove-response").addEventListener("click", () => {
+        responseContainer.style.display = "none";
+        messageResponse = null
+    });
+
+    messageResponse = { userId, userName, userColor, content };
 };
 
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
+chatMessages.addEventListener("dblclick", handleResponse);
