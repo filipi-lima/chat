@@ -150,6 +150,15 @@ body {
     user-select: none;
 }
 
+.message__response {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
 .response__container {
     position: relative;
     background-color: rgba(0, 0, 0, 0.2);
@@ -159,14 +168,6 @@ body {
     color: #f2f2f2;
     font-size: 12px;
     user-select: none;
-}
-
-.message__response {
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 11px;
 }
 
 .chat__form {

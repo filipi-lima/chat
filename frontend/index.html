@@ -26,6 +26,8 @@
                         type="text"
                         class="login__input"
                         placeholder="Seu nome"
+                        minlength="2"
+                        maxlength="12"
                         required
                     />
                     <button type="submit" class="login__button">Entrar</button>
@@ -43,12 +45,12 @@
                             type="text"
                             class="chat__input"
                             placeholder="Mensagem..."
-                            required
                             autocomplete="off"
                             autocorrect="on"
                             spellcheck="true"
                             inputmode="text"
                             name="chat-message"
+                            required
                         />
                         <button type="submit" class="chat__button">
                             <span class="material-symbols-outlined">send</span>

@@ -118,8 +118,7 @@ const handleResponse = ({ target }) => {
     messageResponse = { userId, userName, userColor, content };
 };
 
-let pressTimer;
-
+chat.addEventListener("click", () => chatInput.focus())
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
 chatMessages.addEventListener("dblclick", handleResponse);
@@ -131,6 +130,8 @@ responseContainer.addEventListener("click", ({ target }) => {
 });
 
 // Touch events
+let pressTimer;
+
 chatMessages.addEventListener("touchstart", (event) => {
     pressTimer = setTimeout(() => {
         handleResponse(event)
