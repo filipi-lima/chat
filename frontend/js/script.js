@@ -116,6 +116,7 @@ const handleResponse = ({ target }) => {
     `;
 
     messageResponse = { userId, userName, userColor, content };
+    chatInput.focus()
 };
 
 chat.addEventListener("click", () => chatInput.focus())
