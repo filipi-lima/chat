@@ -141,16 +141,15 @@ chat.addEventListener("click", (event) => {
 // Touch events
 let pressTimer;
 
-chatMessages.addEventListener("touchstart", (e) => {
-    if (e.target !== chatInput) {
+chatMessages.addEventListener("touchstart", (event) => {
+    if (event.target !== chatInput) {
         chatInput.focus();
     }
 
-    const target = e.target;
     pressTimer = setTimeout(() => {
-        handleResponse({ target });
+        handleResponse(event);
     }, 500);
-}, { passive: true });
+});
 
 chatMessages.addEventListener("touchend", () => clearTimeout(pressTimer))
 chatMessages.addEventListener("touchmove", () => clearTimeout(pressTimer))
