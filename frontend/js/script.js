@@ -11,6 +11,7 @@ const loginInput = login.querySelector(".login__input");
 const chat = document.querySelector(".chat");
 const chatForm = chat.querySelector(".chat__form");
 const chatInput = chat.querySelector(".chat__input");
+const chatButton = chat.querySelector(".chat__button");
 const chatMessages = chat.querySelector(".chat__messages");
 const responseContainer = chat.querySelector(".response__container");
 
@@ -102,7 +103,7 @@ const sendMessage = (event) => {
 };
 
 const handleResponse = (event) => {
-    event.preventDefault()
+    keepFocusInput(event)
 
     const messageElement = event.target.closest(".message__other, .message__self");
     if (!messageElement) return;
@@ -118,8 +119,16 @@ const handleResponse = (event) => {
     `;
 
     messageResponse = { userId, userName, userColor, content };
-    chatInput.focus()
+    chatInput.focus();
 };
+
+const keepFocusInput = (event) => {
+    const element = event.target;
+    if (element !== chatInput && element !== chatButton) {
+        event.preventDefault();
+        chatInput.focus();
+    }
+}
 
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
@@ -131,25 +140,17 @@ responseContainer.addEventListener("click", ({ target }) => {
     }
 });
 
-chat.addEventListener("click", (event) => {
-    if (event.target !== chatInput && !e.target.closest('.remove-response')) {
-        event.preventDefault();
-        chatInput.focus()
-    }
-});
+chat.addEventListener("click", (event) => keepFocusInput(event));
 
 // Touch events
 let pressTimer;
 
 chatMessages.addEventListener("touchstart", (event) => {
-    if (event.target !== chatInput) {
-        chatInput.focus();
-    }
-
     pressTimer = setTimeout(() => {
         handleResponse(event);
+        chatInput.focus();
     }, 500);
 });
 
-chatMessages.addEventListener("touchend", () => clearTimeout(pressTimer))
-chatMessages.addEventListener("touchmove", () => clearTimeout(pressTimer))
+chatMessages.addEventListener("touchend", () => clearTimeout(pressTimer));
+chatMessages.addEventListener("touchmove", () => clearTimeout(pressTimer));
