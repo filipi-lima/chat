@@ -11,7 +11,6 @@ const loginInput = login.querySelector(".login__input");
 const chat = document.querySelector(".chat");
 const chatForm = chat.querySelector(".chat__form");
 const chatInput = chat.querySelector(".chat__input");
-const chatButton = chat.querySelector(".chat__button");
 const chatMessages = chat.querySelector(".chat__messages");
 const responseContainer = chat.querySelector(".response__container");
 
