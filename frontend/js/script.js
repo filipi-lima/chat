@@ -131,7 +131,7 @@ responseContainer.addEventListener("click", ({ target }) => {
     }
 });
 
-chat.addEventListener("mousedown", (event) => {
+chat.addEventListener("click", (event) => {
     if (event.target !== chatInput && !e.target.closest('.remove-response')) {
         event.preventDefault();
         chatInput.focus()
