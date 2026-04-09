@@ -129,12 +129,6 @@ responseContainer.addEventListener("click", ({ target }) => {
     }
 });
 
-chat.addEventListener("click", (event) => {
-    if (event.target !== chatInput) {
-        chatInput.focus();
-    }
-});
-
 // Touch events
 let pressTimer;
 
