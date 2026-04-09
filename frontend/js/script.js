@@ -103,9 +103,7 @@ const sendMessage = (event) => {
 };
 
 const handleResponse = (event) => {
-    keepFocusInput(event)
-
-    const messageElement = event.target.closest(".message__other, .message__self");
+    const messageElement = event.target.closest(".message__other, .message__self",);
     if (!messageElement) return;
 
     const { userId, userName, userColor, content } = messageElement.dataset;
@@ -122,14 +120,6 @@ const handleResponse = (event) => {
     chatInput.focus();
 };
 
-const keepFocusInput = (event) => {
-    const element = event.target;
-    if (element !== chatInput && element !== chatButton) {
-        event.preventDefault();
-        chatInput.focus();
-    }
-}
-
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
 chatMessages.addEventListener("dblclick", handleResponse);
@@ -140,7 +130,13 @@ responseContainer.addEventListener("click", ({ target }) => {
     }
 });
 
-chat.addEventListener("click", (event) => keepFocusInput(event));
+chat.addEventListener("click", (event) => {
+    const element = event.target;
+    if (element !== chatInput && element !== chatButton) {
+        event.preventDefault();
+        chatInput.focus();
+    }
+});
 
 // Touch events
 let pressTimer;
