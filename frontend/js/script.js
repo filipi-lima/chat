@@ -101,8 +101,10 @@ const sendMessage = (event) => {
     chatInput.focus();
 };
 
-const handleResponse = ({ target }) => {
-    const messageElement = target.closest(".message__other, .message__self");
+const handleResponse = (event) => {
+    event.preventDefault()
+
+    const messageElement = event.target.closest(".message__other, .message__self");
     if (!messageElement) return;
 
     const { userId, userName, userColor, content } = messageElement.dataset;
@@ -119,7 +121,6 @@ const handleResponse = ({ target }) => {
     chatInput.focus()
 };
 
-chat.addEventListener("click", () => chatInput.focus())
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
 chatMessages.addEventListener("dblclick", handleResponse);
@@ -130,14 +131,26 @@ responseContainer.addEventListener("click", ({ target }) => {
     }
 });
 
+chat.addEventListener("mousedown", (event) => {
+    if (event.target !== chatInput && !e.target.closest('.remove-response')) {
+        event.preventDefault();
+        chatInput.focus()
+    }
+});
+
 // Touch events
 let pressTimer;
 
-chatMessages.addEventListener("touchstart", (event) => {
+chatMessages.addEventListener("touchstart", (e) => {
+    if (e.target !== chatInput) {
+        chatInput.focus();
+    }
+
+    const target = e.target;
     pressTimer = setTimeout(() => {
-        handleResponse(event)
-    }, 500)
-})
+        handleResponse({ target });
+    }, 500);
+}, { passive: true });
 
 chatMessages.addEventListener("touchend", () => clearTimeout(pressTimer))
 chatMessages.addEventListener("touchmove", () => clearTimeout(pressTimer))
