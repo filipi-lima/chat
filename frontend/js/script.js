@@ -131,9 +131,7 @@ responseContainer.addEventListener("click", ({ target }) => {
 });
 
 chat.addEventListener("click", (event) => {
-    const element = event.target;
-    if (element !== chatInput && element !== chatButton) {
-        event.preventDefault();
+    if (event.target !== chatInput) {
         chatInput.focus();
     }
 });
@@ -144,7 +142,6 @@ let pressTimer;
 chatMessages.addEventListener("touchstart", (event) => {
     pressTimer = setTimeout(() => {
         handleResponse(event);
-        chatInput.focus();
     }, 500);
 });
 
