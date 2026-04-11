@@ -11,7 +11,7 @@ wss.on("connection", (ws) => {
     ws.on("message", (data) => {
         const payload = JSON.parse(data.toString());
 
-        if (payload.messageServer && payload.userName) {
+        if (payload.createUser) {
             ws.userName = payload.userName;
         }
 

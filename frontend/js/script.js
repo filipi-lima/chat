@@ -1,6 +1,6 @@
+// Classes
 import Message from "./classes/Message.js";
-import getRandomColor from "./utils/getRandomColor.js";
-import scrollScreen from "./utils/scrollScreen.js";
+import Utils from "./classes/Utils.js"
 
 // Login elements
 const login = document.querySelector(".login");
@@ -16,6 +16,7 @@ const responseContainer = chat.querySelector(".response__container");
 
 // UserSchema
 const user = { id: "", name: "", color: "" };
+
 let websocket;
 let messageResponse = null;
 
@@ -53,7 +54,7 @@ const processMessage = ({ data }) => {
 
     chatMessages.appendChild(message);
 
-    scrollScreen();
+    Utils.scrollScreen();
 };
 
 const handleLogin = (event) => {
@@ -61,7 +62,7 @@ const handleLogin = (event) => {
 
     user.id = crypto.randomUUID();
     user.name = loginInput.value;
-    user.color = getRandomColor();
+    user.color = Utils.getRandomColor();
 
     login.style.display = "none";
     chat.style.display = "flex";
@@ -71,9 +72,12 @@ const handleLogin = (event) => {
     websocket.onopen = () =>
         websocket.send(
             JSON.stringify({
+                userId: user.id,
                 userName: user.name,
+                userColor: user.color,
                 content: `${user.name} entrou no chat`,
                 messageServer: true,
+                createUser: true,
             }),
         );
 
