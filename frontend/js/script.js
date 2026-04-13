@@ -72,7 +72,7 @@ const handleLogin = async (event) => {
     user.color = Utils.getRandomColor();
 
     try {
-        const response = await fetch("http://localhost:8080", {
+        const response = await fetch("https://chat-backend-idsp.onrender.com", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -83,8 +83,7 @@ const handleLogin = async (event) => {
         });
 
         if (response.ok) {
-            websocket = new WebSocket("ws://localhost:8080");
-            // wss://chat-backend-idsp.onrender.com
+            websocket = new WebSocket("wss://chat-backend-idsp.onrender.com");
 
             login.style.display = "none";
             chat.style.display = "flex";
