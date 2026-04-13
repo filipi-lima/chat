@@ -19,7 +19,10 @@ class Message {
         if (messageResponse)
             message.appendChild(this.createResponseElement(messageResponse));
 
-        message.innerHTML += content;
+        const textMessage = document.createElement("span")
+        textMessage.textContent = content;
+        message.appendChild(textMessage)
+
         div.appendChild(message)
 
         return div;
@@ -48,7 +51,7 @@ class Message {
         const sender = document.createElement("span");
         sender.classList.add("user__name");
         sender.classList.add("sender");
-        sender.innerHTML = userName;
+        sender.textContent = userName;
         sender.style.color = userColor;
 
         const messageText = document.createElement("span");
@@ -79,7 +82,9 @@ class Message {
         userName.style.fontWeight = "bold"
         div.appendChild(userName);
 
-        div.innerHTML += messageResponse.content;
+        const textMessage = document.createElement("span")
+        textMessage.textContent = messageResponse.content;
+        div.appendChild(textMessage)
         div.style.borderLeft = `5px solid ${messageResponse.userColor}`;
 
         return div;

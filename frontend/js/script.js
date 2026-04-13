@@ -94,8 +94,7 @@ const handleLogin = async (event) => {
             errorMessage.textContent = data.message;
         }
     } catch (error) {
-        errorMessage.textContent =
-            "Ocorreu um erro. Tente novamente mais tarde";
+        errorMessage.textContent = "Ocorreu um erro. Tente novamente mais tarde";
     }
 };
 
@@ -141,24 +140,33 @@ const sendMessage = (event) => {
     chatInput.value = "";
     messageResponse = null;
     responseContainer.style.display = "none";
+    chatMessages.style.paddingBottom = "70px"
     chatInput.focus();
 };
 
 const handleResponse = (event) => {
-    const messageElement = event.target.closest(
-        ".message__other, .message__self",
-    );
+    const messageElement = event.target.closest(".message__other, .message__self");
     if (!messageElement) return;
 
     const { userId, userName, userColor, content } = messageElement.dataset;
 
+    responseContainer.replaceChildren();
     responseContainer.style.display = "block";
-    responseContainer.innerHTML = `
-        <span>Responder <b style="color: ${userColor}">${userName}</b>: ${content}</span>
-        <button type="button" class="remove-response">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    `;
+
+    const responseText = document.createElement("span");
+    responseText.innerHTML = `Responder <b style="color: ${userColor}">${userName}</b>: `;
+    
+    const textPreview = document.createElement("em");
+    textPreview.textContent = content.length > 25 ? `${content.substring(0, 25)}...` : content;
+    responseText.appendChild(textPreview);
+
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("remove-response");
+    removeBtn.type = "button";
+    removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    
+    responseContainer.append(responseText, removeBtn);
+    chatMessages.style.paddingBottom = "115px"
 
     messageResponse = { userId, userName, userColor, content };
     chatInput.focus();
@@ -172,6 +180,8 @@ chatMessages.addEventListener("dblclick", handleResponse);
 responseContainer.addEventListener("click", ({ target }) => {
     if (target.closest(".remove-response")) {
         responseContainer.style.display = "none";
+        responseContainer.innerHTML = ""
+        chatMessages.style.paddingBottom = "70px"
         messageResponse = null;
     }
 });
