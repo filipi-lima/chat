@@ -28,13 +28,21 @@
                         placeholder="Seu nome"
                         minlength="2"
                         maxlength="12"
-                        required
                     />
                     <button type="submit" class="login__button">Entrar</button>
+                    <span class="error-message"></span>
                 </form>
             </section>
 
             <section class="chat">
+                <header class="chat__header">
+                    <span class="users-connected"></span>
+                    <div>
+                        <div class="online__icon"></div>
+                        <span class="number-users-connected"></span>
+                    </div>
+                </header>
+
                 <section class="chat__messages"></section>
 
                 <form class="chat__form">

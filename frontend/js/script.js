@@ -1,11 +1,12 @@
 // Classes
 import Message from "./classes/Message.js";
-import Utils from "./classes/Utils.js"
+import Utils from "./classes/Utils.js";
 
 // Login elements
 const login = document.querySelector(".login");
 const loginForm = login.querySelector(".login__form");
 const loginInput = login.querySelector(".login__input");
+const errorMessage = login.querySelector(".error-message");
 
 // Chat elements
 const chat = document.querySelector(".chat");
@@ -13,15 +14,19 @@ const chatForm = chat.querySelector(".chat__form");
 const chatInput = chat.querySelector(".chat__input");
 const chatMessages = chat.querySelector(".chat__messages");
 const responseContainer = chat.querySelector(".response__container");
+const usersConnectedElement = chat.querySelector(".users-connected");
+const numberUsersConnected = chat.querySelector(".number-users-connected");
 
 // UserSchema
 const user = { id: "", name: "", color: "" };
 
 let websocket;
-let messageResponse = null;
+let messageResponse;
+let users;
 
 const processMessage = ({ data }) => {
     const {
+        usersConnected,
         userId,
         userName,
         userColor,
@@ -32,6 +37,8 @@ const processMessage = ({ data }) => {
     let message = "";
 
     if (messageServer) {
+        users = usersConnected;
+        setListUsersConnected();
         message = Message.createMessageServerElement(content);
     } else {
         message =
@@ -57,32 +64,65 @@ const processMessage = ({ data }) => {
     Utils.scrollScreen();
 };
 
-const handleLogin = (event) => {
+const handleLogin = async (event) => {
     event.preventDefault();
 
     user.id = crypto.randomUUID();
     user.name = loginInput.value;
     user.color = Utils.getRandomColor();
 
-    login.style.display = "none";
-    chat.style.display = "flex";
+    try {
+        const response = await fetch("http://localhost:8080", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: user.id,
+                userName: user.name.trim().toLowerCase(),
+                userColor: user.color,
+            }),
+        });
 
-    websocket = new WebSocket("wss://chat-backend-idsp.onrender.com");
+        if (response.ok) {
+            websocket = new WebSocket("ws://localhost:8080");
+            // wss://chat-backend-idsp.onrender.com
 
+            login.style.display = "none";
+            chat.style.display = "flex";
+
+            setupWebSocket();
+        } else {
+            const data = await response.json();
+            errorMessage.textContent = data.message;
+        }
+    } catch (error) {
+        errorMessage.textContent =
+            "Ocorreu um erro. Tente novamente mais tarde";
+    }
+};
+
+const setupWebSocket = async () => {
     websocket.onopen = () =>
         websocket.send(
             JSON.stringify({
                 userId: user.id,
                 userName: user.name,
-                userColor: user.color,
-                content: `${user.name} entrou no chat`,
-                messageServer: true,
                 createUser: true,
             }),
         );
 
     websocket.onmessage = processMessage;
     chatInput.focus();
+};
+
+const setListUsersConnected = () => {
+    const usersName = users
+        .slice(0, 3)
+        .map((user) => Utils.capitalize(user.userName))
+        .join(", ");
+
+    usersConnectedElement.innerHTML = usersName;
+    numberUsersConnected.innerHTML = `${users.length} online`;
+    numberUsersConnected.innerHTML = `${users.length} online`;
 };
 
 const sendMessage = (event) => {
@@ -106,7 +146,9 @@ const sendMessage = (event) => {
 };
 
 const handleResponse = (event) => {
-    const messageElement = event.target.closest(".message__other, .message__self",);
+    const messageElement = event.target.closest(
+        ".message__other, .message__self",
+    );
     if (!messageElement) return;
 
     const { userId, userName, userColor, content } = messageElement.dataset;
@@ -123,7 +165,9 @@ const handleResponse = (event) => {
     chatInput.focus();
 };
 
+// Events
 loginForm.addEventListener("submit", handleLogin);
+loginInput.addEventListener("input", () => (errorMessage.textContent = ""));
 chatForm.addEventListener("submit", sendMessage);
 chatMessages.addEventListener("dblclick", handleResponse);
 responseContainer.addEventListener("click", ({ target }) => {
